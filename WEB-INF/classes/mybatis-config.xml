@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!--  —1、配置别名： 包其子包下所有类有效，作用：第三步mapper.xml下parameterType、resultType不用写全路径类名-->
+	<typeAliases>
+		<package name="com.wwl.pojo"/>
+	</typeAliases>
+	
+	<!-- 配置分页插件 -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->
+           <property name="dialect" value="mysql"/> 
+        </plugin>
+    </plugins>
+    
+	
+	<!--  —3、 Mapper的位置  Mapper.xml 写Sql语句的文件的位置 -->
+<!-- 	<mappers>
+		<mapper class="com.itheima.mybatis.mapper.UserMapper" /> 
+		<package name="com.wwl.mapper"/>
+	</mappers>-->
+	
+	<!--  —2、和spring整合后 environments配置的连接数据库等都将废除 下面不用学习(了解 ) -->
+	<!-- <environments default="development">
+		<environment id="development">
+			使用jdbc事务管理
+			<transactionManager type="JDBC" />
+			 —内置数据库连接池
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url"
+					value="jdbc:mysql://localhost:3306/wwl?characterEncoding=utf-8" />
+				<property name="username" value="root" />
+				<property name="password" value="123456" />
+			</dataSource>
+		</environment>
+	</environments> -->
+</configuration>
