@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wwl.mapper.BillsMapper" >
+  <resultMap id="BaseResultMap" type="com.wwl.pojo.Bills" >
+    <id column="billsId" property="billsid" jdbcType="INTEGER" />
+    <result column="date" property="date" jdbcType="DATE" />
+    <result column="lifeGoods" property="lifegoods" jdbcType="REAL" />
+    <result column="waterBill" property="waterbill" jdbcType="REAL" />
+    <result column="electricityBill" property="electricitybill" jdbcType="REAL" />
+    <result column="coalBill" property="coalbill" jdbcType="REAL" />
+    <result column="shoppingOnline" property="shoppingonline" jdbcType="REAL" />
+    <result column="other" property="other" jdbcType="REAL" />
+    <result column="Modified" property="modified" jdbcType="VARCHAR" />
+    <result column="ModifiedTime" property="modifiedtime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="cteatorTime" property="cteatortime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    billsId, date, lifeGoods, waterBill, electricityBill, coalBill, shoppingOnline, other, 
+    Modified, ModifiedTime, creator, cteatorTime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wwl.pojo.BillsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bills
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bills
+    where billsId = #{billsid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bills
+    where billsId = #{billsid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wwl.pojo.BillsExample" >
+    delete from bills
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wwl.pojo.Bills" >
+  <!-- 返回自增长的id -->
+	<selectKey keyProperty="billsid" resultType="Integer" order="AFTER">
+			select LAST_INSERT_ID()
+	</selectKey>
+    insert into bills (billsId, date, lifeGoods, 
+      waterBill, electricityBill, coalBill, 
+      shoppingOnline, other, Modified, 
+      ModifiedTime, creator, cteatorTime
+      )
+    values (#{billsid,jdbcType=INTEGER}, #{date,jdbcType=DATE}, #{lifegoods,jdbcType=REAL}, 
+      #{waterbill,jdbcType=REAL}, #{electricitybill,jdbcType=REAL}, #{coalbill,jdbcType=REAL}, 
+      #{shoppingonline,jdbcType=REAL}, #{other,jdbcType=REAL}, #{modified,jdbcType=VARCHAR}, 
+      #{modifiedtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{cteatortime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wwl.pojo.Bills" >
+    insert into bills
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="billsid != null" >
+        billsId,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="lifegoods != null" >
+        lifeGoods,
+      </if>
+      <if test="waterbill != null" >
+        waterBill,
+      </if>
+      <if test="electricitybill != null" >
+        electricityBill,
+      </if>
+      <if test="coalbill != null" >
+        coalBill,
+      </if>
+      <if test="shoppingonline != null" >
+        shoppingOnline,
+      </if>
+      <if test="other != null" >
+        other,
+      </if>
+      <if test="modified != null" >
+        Modified,
+      </if>
+      <if test="modifiedtime != null" >
+        ModifiedTime,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="cteatortime != null" >
+        cteatorTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="billsid != null" >
+        #{billsid,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=DATE},
+      </if>
+      <if test="lifegoods != null" >
+        #{lifegoods,jdbcType=REAL},
+      </if>
+      <if test="waterbill != null" >
+        #{waterbill,jdbcType=REAL},
+      </if>
+      <if test="electricitybill != null" >
+        #{electricitybill,jdbcType=REAL},
+      </if>
+      <if test="coalbill != null" >
+        #{coalbill,jdbcType=REAL},
+      </if>
+      <if test="shoppingonline != null" >
+        #{shoppingonline,jdbcType=REAL},
+      </if>
+      <if test="other != null" >
+        #{other,jdbcType=REAL},
+      </if>
+      <if test="modified != null" >
+        #{modified,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedtime != null" >
+        #{modifiedtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="cteatortime != null" >
+        #{cteatortime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wwl.pojo.BillsExample" resultType="java.lang.Integer" >
+    select count(*) from bills
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update bills
+    <set >
+      <if test="record.billsid != null" >
+        billsId = #{record.billsid,jdbcType=INTEGER},
+      </if>
+      <if test="record.date != null" >
+        date = #{record.date,jdbcType=DATE},
+      </if>
+      <if test="record.lifegoods != null" >
+        lifeGoods = #{record.lifegoods,jdbcType=REAL},
+      </if>
+      <if test="record.waterbill != null" >
+        waterBill = #{record.waterbill,jdbcType=REAL},
+      </if>
+      <if test="record.electricitybill != null" >
+        electricityBill = #{record.electricitybill,jdbcType=REAL},
+      </if>
+      <if test="record.coalbill != null" >
+        coalBill = #{record.coalbill,jdbcType=REAL},
+      </if>
+      <if test="record.shoppingonline != null" >
+        shoppingOnline = #{record.shoppingonline,jdbcType=REAL},
+      </if>
+      <if test="record.other != null" >
+        other = #{record.other,jdbcType=REAL},
+      </if>
+      <if test="record.modified != null" >
+        Modified = #{record.modified,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifiedtime != null" >
+        ModifiedTime = #{record.modifiedtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.creator != null" >
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cteatortime != null" >
+        cteatorTime = #{record.cteatortime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update bills
+    set billsId = #{record.billsid,jdbcType=INTEGER},
+      date = #{record.date,jdbcType=DATE},
+      lifeGoods = #{record.lifegoods,jdbcType=REAL},
+      waterBill = #{record.waterbill,jdbcType=REAL},
+      electricityBill = #{record.electricitybill,jdbcType=REAL},
+      coalBill = #{record.coalbill,jdbcType=REAL},
+      shoppingOnline = #{record.shoppingonline,jdbcType=REAL},
+      other = #{record.other,jdbcType=REAL},
+      Modified = #{record.modified,jdbcType=VARCHAR},
+      ModifiedTime = #{record.modifiedtime,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      cteatorTime = #{record.cteatortime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wwl.pojo.Bills" >
+    update bills
+    <set >
+      <if test="date != null" >
+        date = #{date,jdbcType=DATE},
+      </if>
+      <if test="lifegoods != null" >
+        lifeGoods = #{lifegoods,jdbcType=REAL},
+      </if>
+      <if test="waterbill != null" >
+        waterBill = #{waterbill,jdbcType=REAL},
+      </if>
+      <if test="electricitybill != null" >
+        electricityBill = #{electricitybill,jdbcType=REAL},
+      </if>
+      <if test="coalbill != null" >
+        coalBill = #{coalbill,jdbcType=REAL},
+      </if>
+      <if test="shoppingonline != null" >
+        shoppingOnline = #{shoppingonline,jdbcType=REAL},
+      </if>
+      <if test="other != null" >
+        other = #{other,jdbcType=REAL},
+      </if>
+      <if test="modified != null" >
+        Modified = #{modified,jdbcType=VARCHAR},
+      </if>
+      <if test="modifiedtime != null" >
+        ModifiedTime = #{modifiedtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="cteatortime != null" >
+        cteatorTime = #{cteatortime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where billsId = #{billsid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wwl.pojo.Bills" >
+    update bills
+    set date = #{date,jdbcType=DATE},
+      lifeGoods = #{lifegoods,jdbcType=REAL},
+      waterBill = #{waterbill,jdbcType=REAL},
+      electricityBill = #{electricitybill,jdbcType=REAL},
+      coalBill = #{coalbill,jdbcType=REAL},
+      shoppingOnline = #{shoppingonline,jdbcType=REAL},
+      other = #{other,jdbcType=REAL},
+      Modified = #{modified,jdbcType=VARCHAR},
+      ModifiedTime = #{modifiedtime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      cteatorTime = #{cteatortime,jdbcType=TIMESTAMP}
+    where billsId = #{billsid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wwl.mapper.BillsExtendingMapper">
+	<resultMap type="BillsExtending" id="billAndDesc">
+	 	<id column="billsId" property="billsid" jdbcType="INTEGER" />
+	    <result column="date" property="date" jdbcType="DATE" />
+	    <result column="lifeGoods" property="lifegoods" jdbcType="REAL" />
+	    <result column="waterBill" property="waterbill" jdbcType="REAL" />
+	    <result column="electricityBill" property="electricitybill" jdbcType="REAL" />
+	    <result column="coalBill" property="coalbill" jdbcType="REAL" />
+	    <result column="shoppingOnline" property="shoppingonline" jdbcType="REAL" />
+	    <result column="other" property="other" jdbcType="REAL" />
+	    <result column="Modified" property="modified" jdbcType="VARCHAR" />
+	    <result column="ModifiedTime" property="modifiedtime" jdbcType="TIMESTAMP" />
+	    <result column="creator" property="creator" jdbcType="VARCHAR" />
+	    <result column="cteatorTime" property="cteatortime" jdbcType="TIMESTAMP" />
+		<association property="describes" javaType="Describes">
+			<id property="describeId" column="describeId"/>
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="lifeGoodsDescribe" property="lifegoodsdescribe" jdbcType="LONGVARCHAR" />
+		    <result column="shoppingOnlineDescribe" property="shoppingonlinedescribe" jdbcType="LONGVARCHAR" />
+		    <result column="otherDescribe" property="otherdescribe" jdbcType="LONGVARCHAR" />
+		</association>	
+	</resultMap> 
+
+  <!-- 通过多条件分页查询，返回集合-->
+	<select id="selectBillsJoindescribes" resultMap="billAndDesc" parameterType="LimitCondition">
+		select * from bills b inner join `describes` d 
+		<where>
+		<choose >
+			<when test="startBirthdate !=null and startBirthdate !=''">
+			b.date BETWEEN #{startBirthdate}
+			</when>
+			<otherwise>
+			b.date BETWEEN '2000-01-01'
+			</otherwise>
+		</choose>
+		<choose >
+			<when test="endBirthdate !=null and endBirthdate !=''">
+			AND #{endBirthdate}
+			</when>
+			<otherwise>
+			AND '2099-12-30'
+			</otherwise>
+		</choose>
+		 <if test="lifegoodsdescribe !=null and lifegoodsdescribe !=''">
+			and d.lifeGoodsDescribe like #{lifegoodsdescribe}
+		</if> 
+		<if test="otherdescribe !=null and otherdescribe !=''">
+			and d.otherDescribe like #{otherdescribe}
+		</if>
+		<if test="shoppingonlinedescribe !=null and shoppingonlinedescribe !=''">
+			and d.shoppingOnlineDescribe like #{shoppingonlinedescribe}
+		</if>
+		and b.billsId=d.bills_Id ORDER BY b.date DESC <!-- limit #{pageNo},#{pageSize}  -->
+		</where>
+	</select>
+	
+	<!-- 根据id关联查询两表数据 -->
+	<select id="selectBillsAndDescribeById"  resultMap="billAndDesc" parameterType="String">
+		select * from bills b inner join `describes` d where d.bills_Id=b.billsId and b.billsId=#{arg0}
+	</select> 
+	
+	<!-- 总和 -->
+	<select id="getTotal"  resultType="float">
+	select SUM(lifeGoods+waterBill+electricityBill+coalBill+shoppingOnline+other) t from bills;
+	</select>
+	<!-- 根据条件查询总和 -->
+	<select id="conditionSelectTotal" resultType="float" parameterType="LimitCondition">
+		select SUM(lifeGoods+waterBill+electricityBill+coalBill+shoppingOnline+other) from bills b inner join `describes` d 
+		<where>
+		<choose >
+			<when test="startBirthdate !=null and startBirthdate !=''">
+			b.date BETWEEN #{startBirthdate}
+			</when>
+			<otherwise>
+			b.date BETWEEN '2000-01-01'
+			</otherwise>
+		</choose>
+		<choose >
+			<when test="endBirthdate !=null and endBirthdate !=''">
+			AND #{endBirthdate}
+			</when>
+			<otherwise>
+			AND '2099-12-30'
+			</otherwise>
+		</choose>
+		 <if test="lifegoodsdescribe !=null and lifegoodsdescribe !=''">
+			and d.lifeGoodsDescribe like #{lifegoodsdescribe}
+		</if> 
+		<if test="otherdescribe !=null and otherdescribe !=''">
+			and d.otherDescribe like #{otherdescribe}
+		</if>
+		<if test="shoppingonlinedescribe !=null and shoppingonlinedescribe !=''">
+			and d.shoppingOnlineDescribe like #{shoppingonlinedescribe}
+		</if>
+		and b.billsId=d.bills_Id 
+		</where>
+	</select>
+</mapper>
